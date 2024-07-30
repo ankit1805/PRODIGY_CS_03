@@ -1,0 +1,69 @@
+import re
+
+class PasswordStrengthAssessor:
+    def __init__(self, password):
+        self.password = password
+        self.strength_score = 0
+        self.feedback = []
+
+    def assess_strength(self):
+        self.check_length()
+        self.check_uppercase()
+        self.check_lowercase()
+        self.check_numbers()
+        self.check_special_chars()
+        self.determine_strength()
+
+    def check_length(self):
+        if len(self.password) < 8:
+            self.feedback.append("Password is too short. It should be at least 8 characters long.")
+        elif len(self.password) >= 12:
+            self.strength_score += 2
+        else:
+            self.strength_score += 1
+
+    def check_uppercase(self):
+        if re.search(r"[A-Z]", self.password):
+            self.strength_score += 1
+        else:
+            self.feedback.append("Password should contain at least one uppercase letter.")
+
+    def check_lowercase(self):
+        if re.search(r"[a-z]", self.password):
+            self.strength_score += 1
+        else:
+            self.feedback.append("Password should contain at least one lowercase letter.")
+
+    def check_numbers(self):
+        if re.search(r"\d", self.password):
+            self.strength_score += 1
+        else:
+            self.feedback.append("Password should contain at least one number.")
+
+    def check_special_chars(self):
+        if re.search(r"[!@#$%^&*()_+=-{};:'<>,./?]", self.password):
+            self.strength_score += 1
+        else:
+            self.feedback.append("Password should contain at least one special character.")
+
+    def determine_strength(self):
+        if self.strength_score < 3:
+            self.feedback.append("Password is weak.")
+        elif self.strength_score < 5:
+            self.feedback.append("Password is medium strength.")
+        else:
+            self.feedback.append("Password is strong.")
+
+    def get_feedback(self):
+        return self.feedback
+
+def main():
+    password = input("Enter a password: ")
+    assessor = PasswordStrengthAssessor(password)
+    assessor.assess_strength()
+    feedback = assessor.get_feedback()
+    for message in feedback:
+        print(message)
+
+if __name__ == "__main__":
+    main()
